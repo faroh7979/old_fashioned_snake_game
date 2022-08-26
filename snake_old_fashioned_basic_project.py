@@ -8,6 +8,31 @@ def snake_speed(text: str, slow_time: float):
     time.sleep(slow_time)
 
 
+def snake_field():
+
+    length = 30
+    width = 10
+
+    for snake_seal in range(length):
+        if snake_seal == 0:
+            print(' ', end='')
+        elif snake_seal == length - 1:
+            print('_')
+        else:
+            print('_', end='')
+
+    for columns in range(width):
+        print('|', ' ' * (length - 3), '|')
+
+    for snake_floor in range(length):
+        if snake_floor == 0:
+            print(' ', end='')
+        elif snake_floor == length - 1:
+            print('_')
+        else:
+            print('_', end='')
+
+
 class MyColors:
     pink = '\033[95m'
     blue = '\033[94m'
@@ -20,4 +45,5 @@ class MyColors:
     underline = '\033[4m'
 
 
+snake_field()
 snake_speed(f"{MyColors.red + '*'} \n", 1)
