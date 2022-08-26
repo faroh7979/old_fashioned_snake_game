@@ -43,7 +43,10 @@ def snake_field():
             print(f"{MyColors.sky_blue + '‾'}", end='')
         else:
             print(f"{MyColors.sky_blue + '‾'}", end='')
-    print()
+
+
+def area_of_death():
+
 
 
 snake_field()
