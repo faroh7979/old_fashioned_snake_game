@@ -112,11 +112,12 @@ def snake_frame(dimension_list: list, death_zone_list: list):
             print(' ', end='')
 
 
-def snake_speed(frame_func, slow_time: float):
+def snake_speed(text: str, slow_time: float):
 
-    sys.stdout.write(frame_func)
+    sys.stdout.write(text)
     sys.stdout.flush()
     time.sleep(slow_time)
+
 
 
 def game_process():
@@ -125,7 +126,9 @@ def game_process():
 
     snake_field(dimension_list)
     snake_death_zone(dimension_list, death_zone_list)
-    snake_speed(snake_frame(dimension_list, death_zone_list), 2)
+    snake_frame(dimension_list, death_zone_list)
+    snake_speed(f"{MyColors.red + '*'} \n", 1)
+    snake_frame(dimension_list, death_zone_list)
 
 
 game_process()
@@ -136,6 +139,3 @@ game_process()
     #sys.stdout.flush()
     #time.sleep(5)
     #print(end='\r')
-
-
-#snake_speed(f"{MyColors.red + '*'} \n", 1)
