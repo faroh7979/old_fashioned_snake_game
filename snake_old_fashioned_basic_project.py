@@ -3,6 +3,7 @@ import time
 import random
 from threading import Timer
 
+
 class MyColors:
 
     pink = '\033[95m'
@@ -22,26 +23,50 @@ def snake_field(dimension_list: list):
 
     if input_size == 's':
 
-        width = 9
-        length = 21
+        width = 4
+        length = 10
+        snake_head_position = (width // 2) * length + length // 2 + 1
 
         dimension_list.append(width)
         dimension_list.append(length)
+        dimension_list.append(snake_head_position)
+
+        # It is about definition of apple position
+        dimension_list.append(False)
+
+        # It is about fictive apple position for first loop
+        dimension_list.append(0)
 
     elif input_size == 'l':
 
         width = 21
         length = 51
+        snake_head_position = (width // 2) * length + length // 2 + 1
 
         dimension_list.append(width)
         dimension_list.append(length)
+        dimension_list.append(snake_head_position)
+
+        # It is about definition of apple position
+        dimension_list.append(False)
+
+        # It is about fictive apple position for first loop
+        dimension_list.append(0)
 
     else:
         width = 13
         length = 31
+        snake_head_position = (width // 2) * length + length // 2 + 1
 
         dimension_list.append(width)
         dimension_list.append(length)
+        dimension_list.append(snake_head_position)
+
+        # It is about definition of apple position
+        dimension_list.append(False)
+
+        # It is about fictive apple position for first loop
+        dimension_list.append(0)
 
     return dimension_list
 
@@ -61,26 +86,69 @@ def snake_death_zone(dimension_list: list, death_zone_list: list):
     return death_zone_list
 
 
-def snake_frame(frame_list: list, dimension_list: list, death_zone_list: list):
+def snake_frame(direction: str, frame_list: list, dimension_list: list, death_zone_list: list):
 
     width = dimension_list[0]
     length = dimension_list[1]
+    snake_head_position = dimension_list[2]
+    apple_position_found = dimension_list[3]
+    apple_position = dimension_list[4]
     total_dimension = length * width
 
-    snake_head_position = (width // 2) * length + length // 2 + 1
     snake_body_position = []
     snake_body_position_iterable = list(map(str, snake_body_position))
     death_zone_list_iterable = list(map(str, death_zone_list))
     apple_position_list = []
 
-    for available_apple_positions in range(1, total_dimension + 1):
-        if str(available_apple_positions) in snake_body_position_iterable \
-                or str(available_apple_positions) in death_zone_list_iterable \
-                or str(available_apple_positions) == str(snake_head_position):
-            continue
-        apple_position_list.append(available_apple_positions)
+    if not apple_position_found:
+        for available_apple_positions in range(1, total_dimension + 1):
+            if str(available_apple_positions) in snake_body_position_iterable \
+                    or str(available_apple_positions) in death_zone_list_iterable \
+                    or str(available_apple_positions) == str(snake_head_position):
+                continue
+            apple_position_list.append(available_apple_positions)
 
-    apple_position = random.choice(apple_position_list)
+        apple_position = random.choice(apple_position_list)
+        dimension_list.pop(3)
+        dimension_list.insert(3, True)
+        dimension_list.pop(4)
+        dimension_list.append(apple_position)
+
+    if direction == 'w':
+        snake_head_position -= length
+        dimension_list.pop(2)
+        dimension_list.insert(2, snake_head_position)
+        if snake_head_position == apple_position:
+            dimension_list.pop(3)
+            dimension_list.insert(3, False)
+            snake_body_position.append(snake_head_position + length)
+
+    elif direction == 's':
+        snake_head_position += length
+        dimension_list.pop(2)
+        dimension_list.insert(2, snake_head_position)
+        if snake_head_position == apple_position:
+            dimension_list.pop(3)
+            dimension_list.insert(3, False)
+            snake_body_position.append(snake_head_position - length)
+
+    elif direction == 'd':
+        snake_head_position += 1
+        dimension_list.pop(2)
+        dimension_list.insert(2, snake_head_position)
+        if snake_head_position == apple_position:
+            dimension_list.pop(3)
+            dimension_list.insert(3, False)
+            snake_body_position.append(snake_head_position - 1)
+
+    elif direction == 'a':
+        snake_head_position -= 1
+        dimension_list.pop(2)
+        dimension_list.insert(2, snake_head_position)
+        if snake_head_position == apple_position:
+            dimension_list.pop(3)
+            dimension_list.insert(3, False)
+            snake_body_position.append(snake_head_position + 1)
 
     for quadrant in range(1, total_dimension + 1):
 
@@ -111,7 +179,7 @@ def snake_frame(frame_list: list, dimension_list: list, death_zone_list: list):
         else:
             frame_list.append(' ')
 
-    return frame_list
+    return frame_list, dimension_list, snake_body_position
 
 
 def snake_speed(text: str, slow_time: float):
@@ -126,23 +194,30 @@ def game_process():
     dimension_list = []
     death_zone_list = []
     frame_list = []
+    direction = ''
     game_on = True
 
     snake_field(dimension_list)
     snake_death_zone(dimension_list, death_zone_list)
 
     while game_on:
-
-        snake_frame(frame_list, dimension_list, death_zone_list)
+        frame_list = []
+        snake_frame(direction, frame_list, dimension_list, death_zone_list)
         frame_string = ''.join(frame_list)
-        #snake_speed(f"{MyColors.red + frame_string} \n", 1)
 
-        t = Timer(2, print, [frame_string])
-        t.start()
-        print(' ')
-        answer = input()
-        t.cancel()
-        if answer:
-            game_on = False
+        print(frame_string)
+
+
+        # timeout = 10
+        # t = Timer(timeout, print, [frame_string])
+        # t.start()
+        # prompt = "You have %d seconds to choose the correct answer...\n" % timeout
+        # direction_input = input(prompt)
+        direction_input = input()
+        if direction_input:
+            direction = direction_input
+
+        #t.cancel()
+
 
 game_process()
