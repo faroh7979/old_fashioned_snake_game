@@ -1,5 +1,6 @@
 import sys
 import time
+import random
 
 
 class MyColors:
@@ -14,16 +15,23 @@ class MyColors:
     underline = '\033[4m'
 
 
-def snake_speed(text: str, slow_time: float):
-    sys.stdout.write(text)
-    sys.stdout.flush()
-    time.sleep(slow_time)
-
-
 def snake_field():
+    input_size = input('Please choose your preferred size!')
 
-    length = 30
-    width = 10
+    if input_size == 's':
+        width = 20
+        length = 8
+    elif input_size == 'l':
+        width = 50
+        length = 20
+    else:
+        width = 30
+        length = 12
+
+    return width, length
+
+
+def snake_movement(length: int, width: int):
 
     for snake_seal in range(length):
         if snake_seal == 0:
@@ -45,9 +53,28 @@ def snake_field():
             print(f"{MyColors.sky_blue + '‾'}", end='')
 
 
-def area_of_death():
+def snake_speed(text: str, slow_time: float):
+    sys.stdout.write(text)
+    sys.stdout.flush()
+    time.sleep(slow_time)
+
+
+#def snake_position(coordinated_nums: list):
+
+
+def game_process():
+    length = 0
+    width = 0
+
+    snake_field()
+    snake_speed(f"{MyColors.red + '*'} \n", 1)
 
 
 
-snake_field()
-snake_speed(f"{MyColors.red + '*'} \n", 1)
+
+
+#for x in range(10):
+    #sys.stdout.write(str(x))
+    #sys.stdout.flush()
+    #time.sleep(5)
+    #print(end='\r')
