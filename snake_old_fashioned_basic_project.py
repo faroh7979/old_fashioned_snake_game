@@ -86,7 +86,7 @@ def snake_death_zone(dimension_list: list, death_zone_list: list):
     return death_zone_list
 
 
-def snake_frame(direction: str, frame_list: list, dimension_list: list, death_zone_list: list):
+def snake_frame(snake_body_position: list, direction: str, frame_list: list, dimension_list: list, death_zone_list: list):
 
     width = dimension_list[0]
     length = dimension_list[1]
@@ -95,7 +95,6 @@ def snake_frame(direction: str, frame_list: list, dimension_list: list, death_zo
     apple_position = dimension_list[4]
     total_dimension = length * width
 
-    snake_body_position = []
     snake_body_position_iterable = list(map(str, snake_body_position))
     death_zone_list_iterable = list(map(str, death_zone_list))
     apple_position_list = []
@@ -192,6 +191,7 @@ def snake_speed(text: str, slow_time: float):
 
 def game_process():
     dimension_list = []
+    snake_body_position = []
     death_zone_list = []
     frame_list = []
     direction = ''
@@ -202,7 +202,7 @@ def game_process():
 
     while game_on:
         frame_list = []
-        snake_frame(direction, frame_list, dimension_list, death_zone_list)
+        snake_frame(snake_body_position, direction, frame_list, dimension_list, death_zone_list)
         frame_string = ''.join(frame_list)
 
         print(frame_string)
