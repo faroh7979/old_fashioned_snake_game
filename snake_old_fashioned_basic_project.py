@@ -15,23 +15,31 @@ class MyColors:
     underline = '\033[4m'
 
 
-def snake_field():
+def snake_field(dimension_list: list):
     input_size = input('Please choose your preferred size!')
 
     if input_size == 's':
         width = 20
         length = 8
+        dimension_list.append(width)
+        dimension_list.append(length)
     elif input_size == 'l':
         width = 50
         length = 20
+        dimension_list.append(width)
+        dimension_list.append(length)
     else:
         width = 30
         length = 12
+        dimension_list.append(width)
+        dimension_list.append(length)
+    return dimension_list
 
-    return width, length
 
+def snake_movement(dimension_list: list):
 
-def snake_movement(length: int, width: int):
+    length = dimension_list[0]
+    width = dimension_list[1]
 
     for snake_seal in range(length):
         if snake_seal == 0:
@@ -63,14 +71,14 @@ def snake_speed(text: str, slow_time: float):
 
 
 def game_process():
-    length = 0
-    width = 0
+    dimension_list = []
 
-    snake_field()
+    snake_field(dimension_list)
+    snake_movement(dimension_list)
     snake_speed(f"{MyColors.red + '*'} \n", 1)
 
 
-
+game_process()
 
 
 #for x in range(10):
