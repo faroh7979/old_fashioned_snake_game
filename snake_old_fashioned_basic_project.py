@@ -1,7 +1,7 @@
 import sys
 import time
 import random
-
+from threading import Timer
 
 class MyColors:
 
@@ -61,7 +61,7 @@ def snake_death_zone(dimension_list: list, death_zone_list: list):
     return death_zone_list
 
 
-def snake_frame(dimension_list: list, death_zone_list: list):
+def snake_frame(frame_list: list, dimension_list: list, death_zone_list: list):
 
     width = dimension_list[0]
     length = dimension_list[1]
@@ -85,31 +85,33 @@ def snake_frame(dimension_list: list, death_zone_list: list):
     for quadrant in range(1, total_dimension + 1):
 
         if quadrant == snake_head_position:
-            print(f"{MyColors.sky_blue + '@'}", end='')
+            frame_list.append(f"{MyColors.pink + '@'}")
 
         elif quadrant in snake_body_position:
-            print(f"{MyColors.sky_blue + '*'}", end='')
+            frame_list.append(f"{MyColors.sky_blue + '*'}")
 
         elif quadrant == apple_position:
-            print(f"{MyColors.sky_blue + '!'}", end='')
+            frame_list.append(f"{MyColors.red + '!'}")
 
         elif quadrant == total_dimension or quadrant == total_dimension - length + 1:
-            print(' ', end='')
+            frame_list.append(' ')
 
         elif quadrant % length == 1:
-            print(f"{MyColors.sky_blue + '|'}", end='')
+            frame_list.append(f"{MyColors.sky_blue + '|'}")
 
         elif quadrant % length == 0:
-            print(f"{MyColors.sky_blue + '|'}")
+            frame_list.append(f"{MyColors.sky_blue + '|'} \n")
 
         elif 1 < quadrant < length:
-            print(f"{MyColors.sky_blue + '‾'}", end='')
+            frame_list.append(f"{MyColors.sky_blue + '‾'}")
 
         elif total_dimension - length < quadrant < total_dimension:
-            print(f"{MyColors.sky_blue + '‾'}", end='')
+            frame_list.append(f"{MyColors.sky_blue + '‾'}")
 
         else:
-            print(' ', end='')
+            frame_list.append(' ')
+
+    return frame_list
 
 
 def snake_speed(text: str, slow_time: float):
@@ -117,25 +119,30 @@ def snake_speed(text: str, slow_time: float):
     sys.stdout.write(text)
     sys.stdout.flush()
     time.sleep(slow_time)
-
+    print(end='\r')
 
 
 def game_process():
     dimension_list = []
     death_zone_list = []
+    frame_list = []
+    game_on = True
 
     snake_field(dimension_list)
     snake_death_zone(dimension_list, death_zone_list)
-    snake_frame(dimension_list, death_zone_list)
-    snake_speed(f"{MyColors.red + '*'} \n", 1)
-    snake_frame(dimension_list, death_zone_list)
 
+    while game_on:
+
+        snake_frame(frame_list, dimension_list, death_zone_list)
+        frame_string = ''.join(frame_list)
+        #snake_speed(f"{MyColors.red + frame_string} \n", 1)
+
+        t = Timer(2, print, [frame_string])
+        t.start()
+        print(' ')
+        answer = input()
+        t.cancel()
+        if answer:
+            game_on = False
 
 game_process()
-
-
-#for x in range(10):
-    #sys.stdout.write(str(x))
-    #sys.stdout.flush()
-    #time.sleep(5)
-    #print(end='\r')
