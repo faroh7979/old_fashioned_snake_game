@@ -22,23 +22,23 @@ def snake_field(dimension_list: list):
 
     if input_size == 's':
 
-        width = 8
-        length = 20
+        width = 9
+        length = 21
 
         dimension_list.append(width)
         dimension_list.append(length)
 
     elif input_size == 'l':
 
-        width = 20
-        length = 50
+        width = 21
+        length = 51
 
         dimension_list.append(width)
         dimension_list.append(length)
 
     else:
-        width = 12
-        length = 30
+        width = 13
+        length = 31
 
         dimension_list.append(width)
         dimension_list.append(length)
@@ -46,21 +46,40 @@ def snake_field(dimension_list: list):
     return dimension_list
 
 
-def snake_movement(dimension_list: list):
+def snake_death_zone(dimension_list: list, death_zone_list: list):
+
+    width = dimension_list[0]
+    length = dimension_list[1]
+    total_dimension = width * length
+
+    for current_quadrant in range(1, total_dimension + 1):
+
+        if current_quadrant % length == 1 or current_quadrant % length == 0 or \
+                1 < current_quadrant < length or total_dimension - length < current_quadrant < total_dimension:
+            death_zone_list.append(current_quadrant)
+
+    return death_zone_list
+
+
+def snake_frame(dimension_list: list, death_zone_list: list):
 
     width = dimension_list[0]
     length = dimension_list[1]
     total_dimension = length * width
-    snake_head_position = total_dimension // 2 - 5
+
+    snake_head_position = (width // 2) * length + length // 2 + 1
     snake_body_position = []
     snake_body_position_iterable = list(map(str, snake_body_position))
+    death_zone_list_iterable = list(map(str, death_zone_list))
     apple_position_list = []
 
     for available_apple_positions in range(1, total_dimension + 1):
         if str(available_apple_positions) in snake_body_position_iterable \
-                or str(available_apple_positions) in snake_body_position_iterable:
+                or str(available_apple_positions) in death_zone_list_iterable \
+                or str(available_apple_positions) == str(snake_head_position):
             continue
         apple_position_list.append(available_apple_positions)
+
     apple_position = random.choice(apple_position_list)
 
     for quadrant in range(1, total_dimension + 1):
@@ -74,6 +93,9 @@ def snake_movement(dimension_list: list):
         elif quadrant == apple_position:
             print(f"{MyColors.sky_blue + '!'}", end='')
 
+        elif quadrant == total_dimension or quadrant == total_dimension - length + 1:
+            print(' ', end='')
+
         elif quadrant % length == 1:
             print(f"{MyColors.sky_blue + '|'}", end='')
 
@@ -83,7 +105,7 @@ def snake_movement(dimension_list: list):
         elif 1 < quadrant < length:
             print(f"{MyColors.sky_blue + '‾'}", end='')
 
-        elif 151 < quadrant < total_dimension:
+        elif total_dimension - length < quadrant < total_dimension:
             print(f"{MyColors.sky_blue + '‾'}", end='')
 
         else:
@@ -102,10 +124,13 @@ def snake_speed(text: str, slow_time: float):
 
 def game_process():
     dimension_list = []
+    death_zone_list = []
 
     snake_field(dimension_list)
-    snake_movement(dimension_list)
+    snake_death_zone(dimension_list, death_zone_list)
+    snake_frame(dimension_list, death_zone_list)
     snake_speed(f"{MyColors.red + '*'} \n", 1)
+    print(death_zone_list)
 
 
 game_process()
