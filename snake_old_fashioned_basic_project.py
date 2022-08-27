@@ -53,6 +53,35 @@ def snake_movement(dimension_list: list):
     total_dimension = length * width
     snake_head_position = total_dimension // 2
     snake_body_position = []
+    apple_position_list = []
+
+    for available_apple_positions in range(1, total_dimension + 1):
+        if available_apple_positions in snake_body_position or available_apple_positions in snake_head_position:
+            continue
+        apple_position_list.append(available_apple_positions)
+    apple_position = random.choice(apple_position_list)
+
+    for quadrant in range(1, total_dimension + 1):
+
+        if quadrant == snake_head_position:
+            print(f"{MyColors.sky_blue + '@'}", end='')
+
+        elif quadrant in snake_body_position:
+            print(f"{MyColors.sky_blue + '*'}", end='')
+
+        elif quadrant == apple_position:
+            print(f"{MyColors.sky_blue + '!'}", end='')
+
+        elif quadrant % length == 1:
+            print(f"{MyColors.sky_blue + '|'}", end='')
+
+        elif quadrant % length == 0:
+            print(f"{MyColors.sky_blue + '|'}")
+
+        elif 1 < quadrant < length:
+            print(f"{MyColors.sky_blue + '‾'}", end='')
+
+        elif 
 
     for snake_seal in range(length):
 
