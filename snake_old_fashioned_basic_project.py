@@ -86,18 +86,87 @@ def snake_death_zone(dimension_list: list, death_zone_list: list):
     return death_zone_list
 
 
-def snake_frame(snake_body_position: list, direction: str, frame_list: list, dimension_list: list, death_zone_list: list):
+def snake_frame(snake_head_tracking_record, total_body_pieces, snake_body_position: list, direction: str, frame_list: list, dimension_list: list, death_zone_list: list):
 
     width = dimension_list[0]
     length = dimension_list[1]
     snake_head_position = dimension_list[2]
-    apple_position_found = dimension_list[3]
     apple_position = dimension_list[4]
     total_dimension = length * width
 
-    snake_body_position_iterable = list(map(str, snake_body_position))
     death_zone_list_iterable = list(map(str, death_zone_list))
     apple_position_list = []
+
+    if not snake_head_tracking_record:
+        snake_head_tracking_record.append(snake_head_position)
+
+    if direction == 'w':
+        snake_head_position -= length
+        snake_head_tracking_record.insert(0, snake_head_position)
+        dimension_list.pop(2)
+        dimension_list.insert(2, snake_head_position)
+        if snake_head_position == apple_position:
+            dimension_list.pop(3)
+            dimension_list.insert(3, False)
+            total_body_pieces[0] += 1
+            for current_index in range(0, total_body_pieces[0] + 1):
+                snake_body_position.append(snake_head_tracking_record[current_index])
+
+        else:
+            for current_index in range(0, total_body_pieces[0] + 1):
+                snake_body_position.append(snake_head_tracking_record[current_index])
+
+    elif direction == 's':
+        snake_head_position += length
+        snake_head_tracking_record.insert(0, snake_head_position)
+        dimension_list.pop(2)
+        dimension_list.insert(2, snake_head_position)
+        if snake_head_position == apple_position:
+            dimension_list.pop(3)
+            dimension_list.insert(3, False)
+            total_body_pieces[0] += 1
+            for current_index in range(0, total_body_pieces[0] + 1):
+                snake_body_position.append(snake_head_tracking_record[current_index])
+
+        else:
+            for current_index in range(0, total_body_pieces[0] + 1):
+                snake_body_position.append(snake_head_tracking_record[current_index])
+
+    elif direction == 'd':
+        snake_head_position += 1
+        snake_head_tracking_record.insert(0, snake_head_position)
+        dimension_list.pop(2)
+        dimension_list.insert(2, snake_head_position)
+        if snake_head_position == apple_position:
+            dimension_list.pop(3)
+            dimension_list.insert(3, False)
+            total_body_pieces[0] += 1
+            for current_index in range(0, total_body_pieces[0] + 1):
+                snake_body_position.append(snake_head_tracking_record[current_index])
+
+        else:
+            for current_index in range(0, total_body_pieces[0] + 1):
+                snake_body_position.append(snake_head_tracking_record[current_index])
+
+    elif direction == 'a':
+        snake_head_position -= 1
+        snake_head_tracking_record.insert(0, snake_head_position)
+        dimension_list.pop(2)
+        dimension_list.insert(2, snake_head_position)
+        if snake_head_position == apple_position:
+            dimension_list.pop(3)
+            dimension_list.insert(3, False)
+            total_body_pieces[0] += 1
+            for current_index in range(0, total_body_pieces[0] + 1):
+                snake_body_position.append(snake_head_tracking_record[current_index])
+
+        else:
+            for current_index in range(0, total_body_pieces[0] + 1):
+                snake_body_position.append(snake_head_tracking_record[current_index])
+
+    snake_body_position_iterable = list(map(str, snake_body_position))
+
+    apple_position_found = dimension_list[3]
 
     if not apple_position_found:
 
@@ -113,106 +182,6 @@ def snake_frame(snake_body_position: list, direction: str, frame_list: list, dim
         dimension_list.insert(3, True)
         dimension_list.pop(4)
         dimension_list.append(apple_position)
-
-    if direction == 'w':
-        snake_head_position -= length
-        dimension_list.pop(2)
-        dimension_list.insert(2, snake_head_position)
-        if snake_head_position == apple_position:
-            dimension_list.pop(3)
-            dimension_list.insert(3, False)
-            snake_body_position.append(snake_head_position + length)
-            for available_apple_positions in range(1, total_dimension + 1):
-                if str(available_apple_positions) in snake_body_position_iterable \
-                        or str(available_apple_positions) in death_zone_list_iterable \
-                        or str(available_apple_positions) == str(snake_head_position):
-                    continue
-                apple_position_list.append(available_apple_positions)
-
-            apple_position = random.choice(apple_position_list)
-            dimension_list.pop(3)
-            dimension_list.insert(3, True)
-            dimension_list.pop(4)
-            dimension_list.append(apple_position)
-        else:
-            if snake_body_position:
-                snake_body_position.pop(-1)
-                snake_body_position.insert(-1, snake_head_position + length)
-
-    elif direction == 's':
-        snake_head_position += length
-        dimension_list.pop(2)
-        dimension_list.insert(2, snake_head_position)
-        if snake_head_position == apple_position:
-            dimension_list.pop(3)
-            dimension_list.insert(3, False)
-            snake_body_position.append(snake_head_position - length)
-            for available_apple_positions in range(1, total_dimension + 1):
-                if str(available_apple_positions) in snake_body_position_iterable \
-                        or str(available_apple_positions) in death_zone_list_iterable \
-                        or str(available_apple_positions) == str(snake_head_position):
-                    continue
-                apple_position_list.append(available_apple_positions)
-
-            apple_position = random.choice(apple_position_list)
-            dimension_list.pop(3)
-            dimension_list.insert(3, True)
-            dimension_list.pop(4)
-            dimension_list.append(apple_position)
-        else:
-            if snake_body_position:
-                snake_body_position.pop(-1)
-                snake_body_position.insert(-1, snake_head_position - length)
-
-    elif direction == 'd':
-        snake_head_position += 1
-        dimension_list.pop(2)
-        dimension_list.insert(2, snake_head_position)
-        if snake_head_position == apple_position:
-            dimension_list.pop(3)
-            dimension_list.insert(3, False)
-            snake_body_position.append(snake_head_position - 1)
-            for available_apple_positions in range(1, total_dimension + 1):
-                if str(available_apple_positions) in snake_body_position_iterable \
-                        or str(available_apple_positions) in death_zone_list_iterable \
-                        or str(available_apple_positions) == str(snake_head_position):
-                    continue
-                apple_position_list.append(available_apple_positions)
-
-            apple_position = random.choice(apple_position_list)
-            dimension_list.pop(3)
-            dimension_list.insert(3, True)
-            dimension_list.pop(4)
-            dimension_list.append(apple_position)
-        else:
-            if snake_body_position:
-                snake_body_position.pop(-1)
-                snake_body_position.insert(-1, snake_head_position - 1)
-
-    elif direction == 'a':
-        snake_head_position -= 1
-        dimension_list.pop(2)
-        dimension_list.insert(2, snake_head_position)
-        if snake_head_position == apple_position:
-            dimension_list.pop(3)
-            dimension_list.insert(3, False)
-            snake_body_position.append(snake_head_position + 1)
-            for available_apple_positions in range(1, total_dimension + 1):
-                if str(available_apple_positions) in snake_body_position_iterable \
-                        or str(available_apple_positions) in death_zone_list_iterable \
-                        or str(available_apple_positions) == str(snake_head_position):
-                    continue
-                apple_position_list.append(available_apple_positions)
-
-            apple_position = random.choice(apple_position_list)
-            dimension_list.pop(3)
-            dimension_list.insert(3, True)
-            dimension_list.pop(4)
-            dimension_list.append(apple_position)
-        else:
-            if snake_body_position:
-                snake_body_position.pop(-1)
-                snake_body_position.insert(-1, snake_head_position + 1)
 
     for quadrant in range(1, total_dimension + 1):
 
@@ -243,7 +212,7 @@ def snake_frame(snake_body_position: list, direction: str, frame_list: list, dim
         else:
             frame_list.append(' ')
 
-    return frame_list, dimension_list, snake_body_position
+    return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces
 
 
 def snake_speed(text: str, slow_time: float):
@@ -257,7 +226,9 @@ def snake_speed(text: str, slow_time: float):
 def game_process():
     dimension_list = []
     death_zone_list = []
-    snake_body_position = []
+
+    snake_head_tracking_record = []
+    total_body_pieces = [0]
 
     direction = ''
 
@@ -266,8 +237,9 @@ def game_process():
 
     while True:
         frame_list = []
+        snake_body_position = []
 
-        snake_frame(snake_body_position, direction, frame_list, dimension_list, death_zone_list)
+        snake_frame(snake_head_tracking_record, total_body_pieces, snake_body_position, direction, frame_list, dimension_list, death_zone_list)
         frame_string = ''.join(frame_list)
 
         print(frame_string)
