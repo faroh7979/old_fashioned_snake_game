@@ -1,7 +1,6 @@
 import sys
 import time
 import random
-from threading import Timer
 
 
 class MyColors:
@@ -245,17 +244,12 @@ def game_process():
         print(frame_string)
         print(end='\r' * 1000)
 
-        # timeout = 10
-        # t = Timer(timeout, print, [frame_string])
-        # t.start()
-        # prompt = "You have %d seconds to choose the correct answer...\n" % timeout
-        # direction_input = input(prompt)
         direction_input = input()
+
         if direction_input:
             direction = direction_input
         if direction == 'q':
             break
-        # t.cancel()
 
 
 game_process()
