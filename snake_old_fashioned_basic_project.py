@@ -100,6 +100,7 @@ def snake_frame(snake_body_position: list, direction: str, frame_list: list, dim
     apple_position_list = []
 
     if not apple_position_found:
+
         for available_apple_positions in range(1, total_dimension + 1):
             if str(available_apple_positions) in snake_body_position_iterable \
                     or str(available_apple_positions) in death_zone_list_iterable \
@@ -121,6 +122,22 @@ def snake_frame(snake_body_position: list, direction: str, frame_list: list, dim
             dimension_list.pop(3)
             dimension_list.insert(3, False)
             snake_body_position.append(snake_head_position + length)
+            for available_apple_positions in range(1, total_dimension + 1):
+                if str(available_apple_positions) in snake_body_position_iterable \
+                        or str(available_apple_positions) in death_zone_list_iterable \
+                        or str(available_apple_positions) == str(snake_head_position):
+                    continue
+                apple_position_list.append(available_apple_positions)
+
+            apple_position = random.choice(apple_position_list)
+            dimension_list.pop(3)
+            dimension_list.insert(3, True)
+            dimension_list.pop(4)
+            dimension_list.append(apple_position)
+        else:
+            if snake_body_position:
+                snake_body_position.pop(-1)
+                snake_body_position.insert(-1, snake_head_position + length)
 
     elif direction == 's':
         snake_head_position += length
@@ -130,6 +147,22 @@ def snake_frame(snake_body_position: list, direction: str, frame_list: list, dim
             dimension_list.pop(3)
             dimension_list.insert(3, False)
             snake_body_position.append(snake_head_position - length)
+            for available_apple_positions in range(1, total_dimension + 1):
+                if str(available_apple_positions) in snake_body_position_iterable \
+                        or str(available_apple_positions) in death_zone_list_iterable \
+                        or str(available_apple_positions) == str(snake_head_position):
+                    continue
+                apple_position_list.append(available_apple_positions)
+
+            apple_position = random.choice(apple_position_list)
+            dimension_list.pop(3)
+            dimension_list.insert(3, True)
+            dimension_list.pop(4)
+            dimension_list.append(apple_position)
+        else:
+            if snake_body_position:
+                snake_body_position.pop(-1)
+                snake_body_position.insert(-1, snake_head_position - length)
 
     elif direction == 'd':
         snake_head_position += 1
@@ -139,6 +172,22 @@ def snake_frame(snake_body_position: list, direction: str, frame_list: list, dim
             dimension_list.pop(3)
             dimension_list.insert(3, False)
             snake_body_position.append(snake_head_position - 1)
+            for available_apple_positions in range(1, total_dimension + 1):
+                if str(available_apple_positions) in snake_body_position_iterable \
+                        or str(available_apple_positions) in death_zone_list_iterable \
+                        or str(available_apple_positions) == str(snake_head_position):
+                    continue
+                apple_position_list.append(available_apple_positions)
+
+            apple_position = random.choice(apple_position_list)
+            dimension_list.pop(3)
+            dimension_list.insert(3, True)
+            dimension_list.pop(4)
+            dimension_list.append(apple_position)
+        else:
+            if snake_body_position:
+                snake_body_position.pop(-1)
+                snake_body_position.insert(-1, snake_head_position - 1)
 
     elif direction == 'a':
         snake_head_position -= 1
@@ -148,6 +197,22 @@ def snake_frame(snake_body_position: list, direction: str, frame_list: list, dim
             dimension_list.pop(3)
             dimension_list.insert(3, False)
             snake_body_position.append(snake_head_position + 1)
+            for available_apple_positions in range(1, total_dimension + 1):
+                if str(available_apple_positions) in snake_body_position_iterable \
+                        or str(available_apple_positions) in death_zone_list_iterable \
+                        or str(available_apple_positions) == str(snake_head_position):
+                    continue
+                apple_position_list.append(available_apple_positions)
+
+            apple_position = random.choice(apple_position_list)
+            dimension_list.pop(3)
+            dimension_list.insert(3, True)
+            dimension_list.pop(4)
+            dimension_list.append(apple_position)
+        else:
+            if snake_body_position:
+                snake_body_position.pop(-1)
+                snake_body_position.insert(-1, snake_head_position + 1)
 
     for quadrant in range(1, total_dimension + 1):
 
@@ -191,22 +256,22 @@ def snake_speed(text: str, slow_time: float):
 
 def game_process():
     dimension_list = []
-    snake_body_position = []
     death_zone_list = []
-    frame_list = []
+    snake_body_position = []
+
     direction = ''
-    game_on = True
 
     snake_field(dimension_list)
     snake_death_zone(dimension_list, death_zone_list)
 
-    while game_on:
+    while True:
         frame_list = []
+
         snake_frame(snake_body_position, direction, frame_list, dimension_list, death_zone_list)
         frame_string = ''.join(frame_list)
 
         print(frame_string)
-
+        print(end='\r' * 1000)
 
         # timeout = 10
         # t = Timer(timeout, print, [frame_string])
@@ -216,8 +281,9 @@ def game_process():
         direction_input = input()
         if direction_input:
             direction = direction_input
-
-        #t.cancel()
+        if direction == 'q':
+            break
+        # t.cancel()
 
 
 game_process()
