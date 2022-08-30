@@ -1,6 +1,5 @@
-import sys
-import time
 import random
+from pynput import keyboard
 
 
 class MyColors:
@@ -214,14 +213,6 @@ def snake_frame(snake_head_tracking_record, total_body_pieces, snake_body_positi
     return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces
 
 
-def snake_speed(text: str, slow_time: float):
-
-    sys.stdout.write(text)
-    sys.stdout.flush()
-    time.sleep(slow_time)
-    print(end='\r')
-
-
 def game_process():
     dimension_list = []
     death_zone_list = []
@@ -241,10 +232,18 @@ def game_process():
         snake_frame(snake_head_tracking_record, total_body_pieces, snake_body_position, direction, frame_list, dimension_list, death_zone_list)
         frame_string = ''.join(frame_list)
 
-        print(frame_string)
-        print(end='\r' * 1000)
+        clearconsole = lambda: print('\n' * 20)
 
-        direction_input = input()
+        clearconsole()
+
+        print(frame_string)
+        with keyboard.Events() as events:
+            # Block for as much as possible
+            event = events.get(2)
+            if event is None:
+                print("YES")
+            else:
+                direction_input = event
 
         if direction_input:
             direction = direction_input
