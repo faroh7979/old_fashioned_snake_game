@@ -232,10 +232,7 @@ def game_process():
         snake_frame(snake_head_tracking_record, total_body_pieces, snake_body_position, direction, frame_list, dimension_list, death_zone_list)
         frame_string = ''.join(frame_list)
 
-        clearconsole = lambda: print('\n' * 30)
-
-        clearconsole()
-
+        print('\n' * 30)
         print(frame_string)
 
         with keyboard.Events() as events:
