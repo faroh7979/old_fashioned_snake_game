@@ -228,27 +228,31 @@ def game_process():
     while True:
         frame_list = []
         snake_body_position = []
-
+        direction_input = ''
         snake_frame(snake_head_tracking_record, total_body_pieces, snake_body_position, direction, frame_list, dimension_list, death_zone_list)
         frame_string = ''.join(frame_list)
 
-        clearconsole = lambda: print('\n' * 20)
+        clearconsole = lambda: print('\n' * 30)
 
         clearconsole()
 
         print(frame_string)
+
         with keyboard.Events() as events:
-            # Block for as much as possible
-            event = events.get(2)
+            event = events.get(10)
             if event is None:
                 print("YES")
-            else:
-                direction_input = event
+            elif event.key == keyboard.KeyCode.from_char('w'):
+                direction_input = 'w'
+            elif event.key == keyboard.KeyCode.from_char('a'):
+                direction_input = 'a'
+            elif event.key == keyboard.KeyCode.from_char('s'):
+                direction_input = 's'
+            elif event.key == keyboard.KeyCode.from_char('d'):
+                direction_input = 'd'
 
         if direction_input:
             direction = direction_input
-        if direction == 'q':
-            break
 
 
 game_process()
