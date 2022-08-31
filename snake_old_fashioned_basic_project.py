@@ -85,16 +85,17 @@ def snake_death_zone(dimension_list: list, death_zone_list: list):
 
 
 def snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snake_body_position: list, direction: str, frame_list: list, dimension_list: list, death_zone_list: list):
+    if total_moves[1]:
+        # The idea is to skip every second return from the keyboard listener
+        total_moves[0] += 1
+        if total_moves[0] % 2 == 1:
+            return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
 
     width = dimension_list[0]
     length = dimension_list[1]
     snake_head_position = dimension_list[2]
     apple_position = dimension_list[4]
     total_dimension = length * width
-    total_moves[0] += 1
-
-    if total_moves[0] % 2 == 1:
-        return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
 
     death_zone_list_iterable = list(map(str, death_zone_list))
     apple_position_list = []
@@ -223,7 +224,7 @@ def game_process():
 
     snake_head_tracking_record = []
     total_body_pieces = [0]
-    total_moves = [-1]
+    total_moves = [-1, True]
 
     direction = ''
 
@@ -233,7 +234,6 @@ def game_process():
     while True:
         frame_list = []
         snake_body_position = []
-        direction_input = ''
         snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snake_body_position, direction, frame_list, dimension_list, death_zone_list)
         frame_string = ''.join(frame_list)
 
@@ -241,20 +241,22 @@ def game_process():
         print(frame_string)
 
         with keyboard.Events() as events:
-            event = events.get(10)
+            event = events.get(2)
             if event is None:
-                print("YES")
+                total_moves[1] = False
+                continue
             elif event.key == keyboard.KeyCode.from_char('w'):
-                direction_input = 'w'
+                direction = 'w'
+                total_moves[1] = True
             elif event.key == keyboard.KeyCode.from_char('a'):
-                direction_input = 'a'
+                direction = 'a'
+                total_moves[1] = True
             elif event.key == keyboard.KeyCode.from_char('s'):
-                direction_input = 's'
+                direction = 's'
+                total_moves[1] = True
             elif event.key == keyboard.KeyCode.from_char('d'):
-                direction_input = 'd'
-
-        if direction_input:
-            direction = direction_input
+                direction = 'd'
+                total_moves[1] = True
 
 
 game_process()
