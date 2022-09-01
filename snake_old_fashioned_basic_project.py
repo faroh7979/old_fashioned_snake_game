@@ -85,6 +85,10 @@ def snake_death_zone(dimension_list: list, death_zone_list: list):
 
 
 def snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snake_body_position: list, direction: str, frame_list: list, dimension_list: list, death_zone_list: list):
+    if total_moves[4]:  # check for forbidden direction
+        total_moves[4] = False  # return to default after the breaking
+        return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
+
     if total_moves[1]:
         # The idea is to skip every second return from the keyboard listener
         total_moves[0] += 1
@@ -256,7 +260,7 @@ def game_process():
 
     snake_head_tracking_record = []
     total_body_pieces = [0]
-    total_moves = [-1, True, False, ""]  # Total moves, input move, death, last direction
+    total_moves = [-1, True, False, "", False]  # Total moves, input move, death, last direction, forbidden direction
 
     direction = ''
 
@@ -281,28 +285,31 @@ def game_process():
             event = events.get(10)
             if event is None:
                 total_moves[1] = False
-                continue
 
             elif event.key == keyboard.KeyCode.from_char('w'):
                 if total_moves[3] == 'w' or total_moves[3] == 's':
+                    total_moves[4] = True
                     continue
                 direction = 'w'
                 total_moves[1] = True
 
             elif event.key == keyboard.KeyCode.from_char('a'):
                 if total_moves[3] == 'a' or total_moves[3] == 'd':
+                    total_moves[4] = True
                     continue
                 direction = 'a'
                 total_moves[1] = True
 
             elif event.key == keyboard.KeyCode.from_char('s'):
                 if total_moves[3] == 's' or total_moves[3] == 'w':
+                    total_moves[4] = True
                     continue
                 direction = 's'
                 total_moves[1] = True
 
             elif event.key == keyboard.KeyCode.from_char('d'):
                 if total_moves[3] == 'd' or total_moves[3] == 'a':
+                    total_moves[4] = True
                     continue
                 direction = 'd'
                 total_moves[1] = True
