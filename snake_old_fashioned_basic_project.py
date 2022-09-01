@@ -115,12 +115,16 @@ def snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snak
             dimension_list.pop(3)
             dimension_list.insert(3, False)
             total_body_pieces[0] += 1
-            for current_index in range(0, total_body_pieces[0]):
+            for current_index in range(1, total_body_pieces[0] + 1):
                 snake_body_position.append(snake_head_tracking_record[current_index])
 
         else:
-            for current_index in range(0, total_body_pieces[0]):
+            for current_index in range(1, total_body_pieces[0] + 1):
                 snake_body_position.append(snake_head_tracking_record[current_index])
+
+            if str(snake_head_position) in list(map(str, snake_body_position)):
+                total_moves[2] = True  # about death
+                return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
 
     elif direction == 's':
         snake_head_position += length
@@ -134,12 +138,16 @@ def snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snak
             dimension_list.pop(3)
             dimension_list.insert(3, False)
             total_body_pieces[0] += 1
-            for current_index in range(0, total_body_pieces[0]):
+            for current_index in range(1, total_body_pieces[0] + 1):
                 snake_body_position.append(snake_head_tracking_record[current_index])
 
         else:
-            for current_index in range(0, total_body_pieces[0]):
+            for current_index in range(1, total_body_pieces[0] + 1):
                 snake_body_position.append(snake_head_tracking_record[current_index])
+
+            if str(snake_head_position) in list(map(str, snake_body_position)):
+                total_moves[2] = True  # about death
+                return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
 
     elif direction == 'd':
         snake_head_position += 1
@@ -153,12 +161,16 @@ def snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snak
             dimension_list.pop(3)
             dimension_list.insert(3, False)
             total_body_pieces[0] += 1
-            for current_index in range(0, total_body_pieces[0]):
+            for current_index in range(1, total_body_pieces[0] + 1):
                 snake_body_position.append(snake_head_tracking_record[current_index])
 
         else:
-            for current_index in range(0, total_body_pieces[0]):
+            for current_index in range(1, total_body_pieces[0] + 1):
                 snake_body_position.append(snake_head_tracking_record[current_index])
+
+            if str(snake_head_position) in list(map(str, snake_body_position)):
+                total_moves[2] = True  # about death
+                return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
 
     elif direction == 'a':
         snake_head_position -= 1
@@ -172,19 +184,18 @@ def snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snak
             dimension_list.pop(3)
             dimension_list.insert(3, False)
             total_body_pieces[0] += 1
-            for current_index in range(0, total_body_pieces[0]):
+            for current_index in range(1, total_body_pieces[0] + 1):
                 snake_body_position.append(snake_head_tracking_record[current_index])
 
         else:
-            for current_index in range(0, total_body_pieces[0]):
+            for current_index in range(1, total_body_pieces[0] + 1):
                 snake_body_position.append(snake_head_tracking_record[current_index])
 
-    snake_body_position_iterable = list(map(str, snake_body_position))
+            if str(snake_head_position) in list(map(str, snake_body_position)):
+                total_moves[2] = True  # about death
+                return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
 
-    if str(snake_head_position) in death_zone_list_iterable or str(snake_head_position) in snake_body_position_iterable:
-        print(snake_body_position_iterable)
-        total_moves[2] = True  # about death
-        return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
+    snake_body_position_iterable = list(map(str, snake_body_position))
 
     apple_position_found = dimension_list[3]
 
@@ -258,11 +269,12 @@ def game_process():
             break
 
         frame_string = ''.join(frame_list)
+
         print('\n' * 50)
         print(frame_string)
 
         with keyboard.Events() as events:
-            event = events.get(2)
+            event = events.get(10)
             if event is None:
                 total_moves[1] = False
                 continue
