@@ -104,6 +104,7 @@ def snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snak
         snake_head_tracking_record.append(snake_head_position)
 
     if direction == 'w':
+        total_moves[3] = 'w'
         snake_head_position -= length
         if str(snake_head_position) in death_zone_list_iterable:
             total_moves[2] = True  # about death
@@ -127,6 +128,7 @@ def snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snak
                 return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
 
     elif direction == 's':
+        total_moves[3] = 's'
         snake_head_position += length
         if str(snake_head_position) in death_zone_list_iterable:
             total_moves[2] = True  # about death
@@ -150,6 +152,7 @@ def snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snak
                 return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
 
     elif direction == 'd':
+        total_moves[3] = 'd'
         snake_head_position += 1
         if str(snake_head_position) in death_zone_list_iterable:
             total_moves[2] = True  # about death
@@ -173,6 +176,7 @@ def snake_frame(total_moves, snake_head_tracking_record, total_body_pieces, snak
                 return frame_list, dimension_list, snake_body_position, snake_head_tracking_record, total_body_pieces, total_moves
 
     elif direction == 'a':
+        total_moves[3] = 'a'
         snake_head_position -= 1
         if str(snake_head_position) in death_zone_list_iterable:
             total_moves[2] = True  # about death
@@ -252,7 +256,7 @@ def game_process():
 
     snake_head_tracking_record = []
     total_body_pieces = [0]
-    total_moves = [-1, True, False]  # Total moves, input move, death
+    total_moves = [-1, True, False, ""]  # Total moves, input move, death, last direction
 
     direction = ''
 
@@ -270,7 +274,7 @@ def game_process():
 
         frame_string = ''.join(frame_list)
 
-        print('\n' * 50)
+        print('\n' * 0)
         print(frame_string)
 
         with keyboard.Events() as events:
@@ -278,16 +282,28 @@ def game_process():
             if event is None:
                 total_moves[1] = False
                 continue
+
             elif event.key == keyboard.KeyCode.from_char('w'):
+                if total_moves[3] == 'w' or total_moves[3] == 's':
+                    continue
                 direction = 'w'
                 total_moves[1] = True
+
             elif event.key == keyboard.KeyCode.from_char('a'):
+                if total_moves[3] == 'a' or total_moves[3] == 'd':
+                    continue
                 direction = 'a'
                 total_moves[1] = True
+
             elif event.key == keyboard.KeyCode.from_char('s'):
+                if total_moves[3] == 's' or total_moves[3] == 'w':
+                    continue
                 direction = 's'
                 total_moves[1] = True
+
             elif event.key == keyboard.KeyCode.from_char('d'):
+                if total_moves[3] == 'd' or total_moves[3] == 'a':
+                    continue
                 direction = 'd'
                 total_moves[1] = True
 
